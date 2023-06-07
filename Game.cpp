@@ -1,8 +1,11 @@
 #include "Game.h"
 #include "Globals.h"
+#include "Bird.h"
 
-Game::Game(sf::RenderWindow& window) : win(window)
+Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGame(true)
 {
+    win.setFramerateLimit(60);
+
     backGroundTexture.loadFromFile("C:/Users/HUAWEI MATE/OneDrive/Documents/FlappyBirdSFMLProject/assests/background.png");
     backGroundSprite.setTexture(backGroundTexture);
     backGroundSprite.setScale(ScaleFactor, ScaleFactor);
@@ -31,8 +34,18 @@ void Game::startGameLoop()
             if(event.type == sf::Event::Closed){
                 win.close();
             }
+            if(event.type == sf::Event::KeyPressed && runGame){
+                if(event.key.code == sf::Keyboard::Enter && !isEnterPressed){
+                    isEnterPressed = true;
+                    bird.setShouldFly(true);
+                }
+                if(event.key.code == sf::Keyboard::Space && isEnterPressed){
+                    bird.flapBird(dt);
+                }
+            }
         }
         moveGround(dt);
+        bird.update(dt);
 
         draw();
         //display the window "win"
@@ -45,6 +58,7 @@ void Game::draw()
     win.draw(backGroundSprite);
     win.draw(groundSprite1);
     win.draw(groundSprite2);
+    win.draw(bird.birdSprite);
 }
 
 void Game::moveGround(sf::Time& dt)
