@@ -2,7 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include "Bird.h"
 #include "bird.cpp"
-
+#include <vector>
+#include "Pipe.h"
+#include <random>
+#include "Pipe.cpp"
 
 class Game
 {
@@ -20,4 +23,10 @@ private:
     const int moveSpeed=270;
     void draw();
     void moveGround(sf::Time&);
+    void doProcessing(sf::Time& dt);
+    int pipeCounter, pipeSpawnTime;
+    std::vector<Pipe> pipes;
+    std::random_device rd;
+    std::uniform_int_distribution<int> dist{250, 250};
+
 };

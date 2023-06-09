@@ -1,8 +1,10 @@
 #include "Game.h"
 #include "Globals.h"
 #include "Bird.h"
+#include "Pipe.h"
 
-Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGame(true)
+Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGame(true),
+    pipeCounter(71), pipeSpawnTime(70)
 {
     win.setFramerateLimit(60);
 
@@ -20,6 +22,27 @@ Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGa
 
     groundSprite1.setPosition(0, 580);
     groundSprite2.setPosition(groundSprite1.getGlobalBounds().width,580);
+
+    Pipe::loadtextures();
+}
+
+void Game::doProcessing(sf::Time& dt)
+{
+    if(isEnterPressed){
+        moveGround(dt);
+        if(pipeCounter > pipeSpawnTime){
+            pipes.push_back(Pipe(dist(rd)));
+            pipeCounter = 0;
+        }
+        pipeCounter++;
+        for(int i=0 ; i<pipes.size() ; i++){
+            pipes[i].update(dt);
+            if(pipes[i].getRightBound() < 0){
+                pipes.erase(pipes.begin() + i);
+            }
+        }
+    }
+    bird.update(dt);
 }
 
 void Game::startGameLoop()
@@ -37,16 +60,15 @@ void Game::startGameLoop()
             if(event.type == sf::Event::KeyPressed && runGame){
                 if(event.key.code == sf::Keyboard::Enter && !isEnterPressed){
                     isEnterPressed = true;
-                    bird.setShouldFly(true);
+                    bird.setShouldFly(true); // to start the game
                 }
                 if(event.key.code == sf::Keyboard::Space && isEnterPressed){
-                    bird.flapBird(dt);
+                    bird.flapBird(dt); //to make the bird jump
                 }
             }
         }
-        moveGround(dt);
-        bird.update(dt);
 
+        doProcessing(dt);
         draw();
         //display the window "win"
         win.display();
@@ -56,6 +78,10 @@ void Game::startGameLoop()
 void Game::draw()
 {
     win.draw(backGroundSprite);
+    for(Pipe& pipe : pipes){
+        win.draw(pipe.spriteDown);
+        win.draw((pipe.spriteUp));
+    }
     win.draw(groundSprite1);
     win.draw(groundSprite2);
     win.draw(bird.birdSprite);
