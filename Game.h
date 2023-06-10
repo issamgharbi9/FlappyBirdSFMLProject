@@ -17,7 +17,6 @@ public:
 private:
     sf::Texture backGroundTexture, groundTexture;
     sf::Sprite backGroundSprite, groundSprite1, groundSprite2;
-    sf::Clock clock;
     Bird bird;
     bool isEnterPressed, runGame;
     const int moveSpeed=270;
@@ -28,6 +27,6 @@ private:
     int pipeCounter, pipeSpawnTime;
     std::vector<Pipe> pipes;
     std::random_device rd;
-    std::uniform_int_distribution<int> dist{250, 250};
+    std::uniform_int_distribution<int> dist{250, 550};
 
 };
