@@ -41,6 +41,7 @@ void Game::doProcessing(sf::Time& dt)
                 pipes.erase(pipes.begin() + i);
             }
         }
+        checkCollisions();
     }
     bird.update(dt);
 }
@@ -72,6 +73,18 @@ void Game::startGameLoop()
         draw();
         //display the window "win"
         win.display();
+    }
+}
+
+void Game::checkCollisions()
+{
+    if(pipes.size() > 0){
+        if(pipes[0].spriteDown.getGlobalBounds().intersects(bird.birdSprite.getGlobalBounds()) ||
+                pipes[0].spriteUp.getGlobalBounds().intersects(bird.birdSprite.getGlobalBounds()) ||
+                bird.birdSprite.getGlobalBounds().top >= 542){
+            isEnterPressed = false;
+            runGame = false;
+        }
     }
 }
 

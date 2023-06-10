@@ -24,6 +24,7 @@ private:
     void draw();
     void moveGround(sf::Time&);
     void doProcessing(sf::Time& dt);
+    void checkCollisions();
     int pipeCounter, pipeSpawnTime;
     std::vector<Pipe> pipes;
     std::random_device rd;

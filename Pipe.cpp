@@ -31,4 +31,4 @@ float Pipe::getRightBound()
 }
 
  sf::Texture Pipe::textureDown, Pipe::textureUp;
- int Pipe::pipeDistance=100, Pipe::moveSpeed=400;
+ int Pipe::pipeDistance=120, Pipe::moveSpeed=400;
