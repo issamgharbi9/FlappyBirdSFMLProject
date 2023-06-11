@@ -24,9 +24,12 @@ private:
     void moveGround(sf::Time&);
     void doProcessing(sf::Time& dt);
     void checkCollisions();
+    void restartGame();
     int pipeCounter, pipeSpawnTime;
     std::vector<Pipe> pipes;
     std::random_device rd;
     std::uniform_int_distribution<int> dist{250, 550};
+    sf::Font font;
+    sf::Text restartText;
 
 };

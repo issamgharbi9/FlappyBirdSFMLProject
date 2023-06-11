@@ -23,6 +23,14 @@ Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGa
     groundSprite1.setPosition(0, 580);
     groundSprite2.setPosition(groundSprite1.getGlobalBounds().width,580);
 
+    font.loadFromFile("C:/Users/HUAWEI MATE/OneDrive/Documents/FlappyBirdSFMLProject/assests/arial.ttf");
+    restartText.setFont(font);
+    restartText.setCharacterSize(40);
+    restartText.setFillColor(sf::Color::Black);
+    restartText.setPosition(160, 650);
+    restartText.setString("Restart Game !!");
+
+
     Pipe::loadtextures();
 }
 
@@ -67,6 +75,13 @@ void Game::startGameLoop()
                     bird.flapBird(dt); //to make the bird jump
                 }
             }
+            if(event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left &&
+                    !runGame)
+            {
+                if(restartText.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y)){
+                    restartGame();
+                }
+            }
         }
 
         doProcessing(dt);
@@ -98,6 +113,10 @@ void Game::draw()
     win.draw(groundSprite1);
     win.draw(groundSprite2);
     win.draw(bird.birdSprite);
+
+    if(!runGame){
+        win.draw(restartText);
+    }
 }
 
 void Game::moveGround(sf::Time& dt)
@@ -115,4 +134,14 @@ void Game::moveGround(sf::Time& dt)
         groundSprite2.setPosition(groundSprite1.getGlobalBounds().left + groundSprite1.getGlobalBounds().width, 580);
     }
 
+}
+
+void Game::restartGame()
+{
+    bird.resetBirdPosition();
+    bird.setShouldFly(false);
+    runGame = true;
+    isEnterPressed = false;
+    pipeCounter = 71;
+    pipes.clear();
 }
