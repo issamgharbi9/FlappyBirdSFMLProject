@@ -18,18 +18,20 @@ private:
     sf::Texture backGroundTexture, groundTexture;
     sf::Sprite backGroundSprite, groundSprite1, groundSprite2;
     Bird bird;
-    bool isEnterPressed, runGame;
+    bool isEnterPressed, runGame, startMonitoring;
     const int moveSpeed=270;
     void draw();
     void moveGround(sf::Time&);
     void doProcessing(sf::Time& dt);
     void checkCollisions();
     void restartGame();
-    int pipeCounter, pipeSpawnTime;
+    void checkScore();
+    std::string toString(int);
+    int pipeCounter, pipeSpawnTime, score;
     std::vector<Pipe> pipes;
     std::random_device rd;
     std::uniform_int_distribution<int> dist{250, 550};
     sf::Font font;
-    sf::Text restartText;
+    sf::Text restartText, scoretext;
 
 };

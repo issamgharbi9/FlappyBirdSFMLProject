@@ -2,9 +2,10 @@
 #include "Globals.h"
 #include "Bird.h"
 #include "Pipe.h"
+#include <sstream>
 
-Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGame(true),
-    pipeCounter(71), pipeSpawnTime(70)
+Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGame(true), startMonitoring(false),
+    pipeCounter(71), pipeSpawnTime(70), score(0)
 {
     win.setFramerateLimit(60);
 
@@ -30,6 +31,12 @@ Game::Game(sf::RenderWindow& window) : win(window), isEnterPressed(false), runGa
     restartText.setPosition(160, 650);
     restartText.setString("Restart Game !!");
 
+    scoretext.setFont(font);
+    scoretext.setCharacterSize(25);
+    scoretext.setFillColor(sf::Color::Black);
+    scoretext.setPosition(15,15);
+    scoretext.setString("Score : 0");
+
 
     Pipe::loadtextures();
 }
@@ -50,6 +57,7 @@ void Game::doProcessing(sf::Time& dt)
             }
         }
         checkCollisions();
+        checkScore();
     }
     bird.update(dt);
 }
@@ -113,6 +121,7 @@ void Game::draw()
     win.draw(groundSprite1);
     win.draw(groundSprite2);
     win.draw(bird.birdSprite);
+    win.draw(scoretext);
 
     if(!runGame){
         win.draw(restartText);
@@ -144,4 +153,35 @@ void Game::restartGame()
     isEnterPressed = false;
     pipeCounter = 71;
     pipes.clear();
+    score = 0;
+    scoretext.setString("Score : 0");
+}
+
+void Game::checkScore()
+{
+    if(pipes.size() > 0){
+        if(!startMonitoring){
+            if(bird.birdSprite.getGlobalBounds().left > pipes[0].spriteDown.getGlobalBounds().left &&
+                    bird.getRightBound() < pipes[0].getRightBound())
+            {
+                startMonitoring = true;
+            }
+        }else
+        {
+            if(bird.birdSprite.getGlobalBounds().left > pipes[0].getRightBound())
+            {
+                score++;
+                scoretext.setString("Score : " + toString(score) );
+                startMonitoring = false;
+            }
+        }
+    }
+}
+
+std::string Game::toString(int num)
+{
+    std::stringstream ss;
+    ss << num;
+    return ss.str();
+
 }
